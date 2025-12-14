@@ -1,0 +1,60 @@
+# Common packages to install on all homelab machines
+common_packages:
+  # Editors and shells
+  - vim
+  - neovim
+  - zsh
+
+  # CLI utilities
+  - zoxide
+  - fzf
+  - tmux
+  - tree
+  - jq
+  - ripgrep
+  - tmux
+
+  # Version control
+  - git
+
+  # System monitoring and management
+  - htop
+  - btop
+  - iotop
+  - iftop
+  - ncdu
+
+  # Network tools
+  - curl
+  - wget
+  - net-tools
+  - dnsutils
+  - nmap
+  - traceroute
+  - tcpdump
+
+  # Container and virtualization
+  - docker.io
+  - docker-compose
+
+  # Build tools and libraries
+  - build-essential
+  - ca-certificates
+  - gnupg
+  - lsb-release
+
+  # System utilities
+  - rsync
+  - unzip
+  - zip
+  - tar
+  - p7zip-full
+
+# Timezone and Locale
+timezone: "Asia/Kolkata"
+locale: "en_IN.UTF-8"
+
+# Tailscale Configuration (Shared across all hosts)
+tailscale_auth_key: "{{ vault_tailscale_auth_key }}"
+tailscale_hostname: "{{ inventory_hostname }}"
+tailscale_args: "--accept-routes --ssh"

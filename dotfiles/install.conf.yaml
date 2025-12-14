@@ -1,0 +1,21 @@
+- defaults:
+    link:
+      relink: true # Removes old links even if they point to the correct target
+      create: true # Create parent dirs if needed
+      force: true # Remove existing file and create with a symlink
+
+- clean: ["~"]
+
+# Format like:
+# Actual path: your dotfiles repo reference
+- link:
+    ~/.tmux.conf: .tmux.conf
+    ~/.vimrc: .vimrc
+    ~/.curlrc: .curlrc
+    ~/.psqlrc: .psqlrc
+    ~/.wgetrc: .wgetrc
+    ~/.gitconfig: .gitconfig
+    ~/.zshrc: .zshrc
+
+- shell:
+    - [git submodule update --init --recursive, Installing submodules]

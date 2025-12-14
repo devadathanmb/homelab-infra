@@ -1,0 +1,8 @@
+# Host-specific variables for 'pi'
+#
+# This file contains non-sensitive configuration specific to this host.
+# Sensitive values are referenced from vault.yaml in this same directory.
+
+# Cloudflare Tunnel Configuration
+# The actual tunnel token is stored encrypted in host_vars/pi/vault.yaml
+cloudflared_tunnel_token: "{{ vault_cloudflared_tunnel_token }}"

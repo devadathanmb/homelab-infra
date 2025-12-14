@@ -1,0 +1,62 @@
+- name: Bootstrap fresh Debian installation
+  hosts: homelab
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      tags: [bootstrap, packages]
+
+    - name: Upgrade all packages to latest version
+      ansible.builtin.apt:
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+      tags: [bootstrap, upgrade]
+
+    - name: Install common packages
+      ansible.builtin.apt:
+        name: "{{ common_packages }}"
+        state: present
+      tags: [bootstrap, packages]
+
+    - name: Set timezone
+      community.general.timezone:
+        name: "{{ timezone }}"
+      tags: [bootstrap, system]
+
+    - name: Set locale
+      ansible.builtin.locale_gen:
+        name: "{{ locale }}"
+        state: present
+      tags: [bootstrap, system]
+
+    - name: Ensure unattended-upgrades is configured
+      ansible.builtin.apt:
+        name: unattended-upgrades
+        state: present
+      tags: [bootstrap, security]
+
+    - name: Enable and start Docker service
+      ansible.builtin.systemd:
+        name: docker
+        enabled: yes
+        state: started
+      tags: [bootstrap, docker]
+
+    - name: Add user to docker group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+      tags: [bootstrap, docker]
+
+    - name: Reboot if required
+      ansible.builtin.reboot:
+        msg: "Reboot initiated by Ansible for system updates"
+        reboot_timeout: 300
+      when: ansible_facts['reboot_required'] is defined and ansible_facts['reboot_required']
+      tags: [never, reboot]

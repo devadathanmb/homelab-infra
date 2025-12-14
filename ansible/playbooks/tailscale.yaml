@@ -1,0 +1,81 @@
+---
+- name: Install and configure Tailscale
+  hosts: homelab
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Ensure keyrings directory exists
+      ansible.builtin.file:
+        path: /usr/share/keyrings
+        state: directory
+        mode: "0755"
+      tags: [tailscale, install]
+
+    - name: Download Tailscale GPG key
+      ansible.builtin.get_url:
+        url: "https://pkgs.tailscale.com/stable/debian/{{ ansible_distribution_release }}.noarmor.gpg"
+        dest: /usr/share/keyrings/tailscale-archive-keyring.gpg
+        mode: "0644"
+      tags: [tailscale, install]
+
+    - name: Add Tailscale repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/debian {{ ansible_distribution_release }} main"
+        state: present
+        filename: tailscale
+      tags: [tailscale, install]
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      tags: [tailscale, install]
+
+    - name: Install Tailscale
+      ansible.builtin.apt:
+        name: tailscale
+        state: present
+      tags: [tailscale, install]
+
+    - name: Check if Tailscale is already authenticated
+      ansible.builtin.command: tailscale status --json
+      register: tailscale_status
+      changed_when: false
+      failed_when: false
+      tags: [tailscale, configure]
+
+    - name: Parse Tailscale status
+      ansible.builtin.set_fact:
+        tailscale_backend_state: "{{ (tailscale_status.stdout | from_json).BackendState | default('') }}"
+      when: tailscale_status.rc == 0
+      tags: [tailscale, configure]
+
+    - name: Authenticate Tailscale
+      ansible.builtin.command: >
+        tailscale up
+        --auth-key={{ tailscale_auth_key }}
+        --hostname={{ tailscale_hostname }}
+        {{ tailscale_args }}
+      when: tailscale_backend_state is not defined or tailscale_backend_state != "Running"
+      register: tailscale_up
+      changed_when: tailscale_up.rc == 0
+      tags: [tailscale, configure]
+
+    - name: Enable and start tailscaled service
+      ansible.builtin.systemd:
+        name: tailscaled
+        enabled: yes
+        state: started
+      tags: [tailscale, configure]
+
+    - name: Display Tailscale status
+      ansible.builtin.command: tailscale status
+      register: final_status
+      changed_when: false
+      tags: [tailscale, verify]
+
+    - name: Show Tailscale connection info
+      ansible.builtin.debug:
+        var: final_status.stdout_lines
+      tags: [tailscale, verify]

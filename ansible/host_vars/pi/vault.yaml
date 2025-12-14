@@ -1,0 +1,18 @@
+# Ansible Vault - Host-specific Credentials for 'pi'
+#
+# This file contains credentials specific to this host only.
+# Shared credentials should go in group_vars/vault.yaml
+#
+# IMPORTANT: Encrypt this file before committing to git!
+#
+# To encrypt this file:
+#   ansible-vault encrypt host_vars/pi/vault.yaml --vault-password-file ~/.ansible_vault_pass
+#
+# To edit this encrypted file later:
+#   ansible-vault edit host_vars/pi/vault.yaml --vault-password-file ~/.ansible_vault_pass
+
+# Cloudflare Tunnel Token (Unique per host)
+# Generate at: Cloudflare Zero Trust Dashboard > Networks > Tunnels > Create Tunnel
+# Each host should have its own tunnel and token
+# Format: eyJhIjoiXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...
+vault_cloudflared_tunnel_token: "REPLACE_WITH_YOUR_CLOUDFLARE_TUNNEL_TOKEN_FOR_PI"

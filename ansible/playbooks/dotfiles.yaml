@@ -1,0 +1,41 @@
+---
+- name: Deploy dotfiles using dotbot
+  hosts: homelab
+  become: false # Run as regular user, not root
+  gather_facts: true
+
+  vars:
+    # Source: entire homelab-infra directory on control machine
+    homelab_source: "../../"
+
+    # Destination on remote machine
+    homelab_dest: "{{ ansible_env.HOME }}/repos/homelab-infra"
+
+  tasks:
+    - name: Ensure repos directory exists on remote
+      ansible.builtin.file:
+        path: "{{ ansible_env.HOME }}/repos"
+        state: directory
+        mode: "0755"
+      tags: [dotfiles, sync]
+
+    - name: Sync entire homelab-infra directory to remote machine
+      ansible.posix.synchronize:
+        src: "{{ homelab_source }}"
+        dest: "{{ homelab_dest }}"
+        delete: yes
+        recursive: yes
+      tags: [dotfiles, sync]
+
+    - name: Run dotbot install to create symlinks
+      ansible.builtin.command:
+        cmd: ./install
+        chdir: "{{ homelab_dest }}/dotfiles"
+      register: dotbot_output
+      changed_when: "'All tasks executed successfully' in dotbot_output.stdout"
+      tags: [dotfiles, install]
+
+    - name: Display dotbot output
+      ansible.builtin.debug:
+        var: dotbot_output.stdout_lines
+      tags: [dotfiles, install]

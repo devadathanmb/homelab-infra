@@ -1,0 +1,98 @@
+---
+- name: Install and configure Cloudflare Tunnel
+  hosts: homelab
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Ensure keyrings directory exists
+      ansible.builtin.file:
+        path: /usr/share/keyrings
+        state: directory
+        mode: "0755"
+      tags: [cloudflared, install]
+
+    - name: Download Cloudflare GPG key
+      ansible.builtin.get_url:
+        url: https://pkg.cloudflare.com/cloudflare-main.gpg
+        dest: /usr/share/keyrings/cloudflare-main.gpg
+        mode: "0644"
+      tags: [cloudflared, install]
+
+    - name: Add Cloudflare repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared {{ ansible_distribution_release }} main"
+        state: present
+        filename: cloudflared
+      tags: [cloudflared, install]
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      tags: [cloudflared, install]
+
+    - name: Install cloudflared
+      ansible.builtin.apt:
+        name: cloudflared
+        state: present
+      tags: [cloudflared, install]
+
+    - name: Ensure cloudflared config directory exists
+      ansible.builtin.file:
+        path: /etc/cloudflared
+        state: directory
+        mode: "0755"
+        owner: root
+        group: root
+      tags: [cloudflared, configure]
+
+    - name: Check if tunnel is already configured
+      ansible.builtin.stat:
+        path: /etc/cloudflared/config.yml
+      register: cloudflared_config
+      tags: [cloudflared, configure]
+
+    - name: Install tunnel using token
+      ansible.builtin.command: >
+        cloudflared service install {{ cloudflared_tunnel_token }}
+      when: not cloudflared_config.stat.exists
+      register: tunnel_install
+      changed_when: tunnel_install.rc == 0
+      tags: [cloudflared, configure]
+
+    - name: Enable and start cloudflared service
+      ansible.builtin.systemd:
+        name: cloudflared
+        enabled: yes
+        state: started
+      tags: [cloudflared, configure]
+
+    - name: Wait for tunnel to establish
+      ansible.builtin.pause:
+        seconds: 5
+      tags: [cloudflared, verify]
+
+    - name: Check cloudflared service status
+      ansible.builtin.systemd:
+        name: cloudflared
+      register: cloudflared_service
+      tags: [cloudflared, verify]
+
+    - name: Display cloudflared service status
+      ansible.builtin.debug:
+        msg: "Cloudflared service is {{ cloudflared_service.status.ActiveState }}"
+      tags: [cloudflared, verify]
+
+    - name: Get tunnel info
+      ansible.builtin.command: cloudflared tunnel info
+      register: tunnel_info
+      changed_when: false
+      failed_when: false
+      tags: [cloudflared, verify]
+
+    - name: Display tunnel information
+      ansible.builtin.debug:
+        var: tunnel_info.stdout_lines
+      when: tunnel_info.rc == 0
+      tags: [cloudflared, verify]

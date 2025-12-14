@@ -1,0 +1,26 @@
+# Ansible Vault - Shared Credentials (Group-level)
+#
+# This file contains credentials shared across ALL homelab hosts.
+# Host-specific credentials should go in host_vars/<hostname>/vault.yaml
+#
+# IMPORTANT: Encrypt this file before committing to git!
+#
+# To encrypt this file:
+#   1. First, create a vault password file (if you haven't already):
+#      echo 'your-strong-password' > ~/.ansible_vault_pass
+#      chmod 600 ~/.ansible_vault_pass
+#
+#   2. Then encrypt this file:
+#      ansible-vault encrypt group_vars/vault.yaml --vault-password-file ~/.ansible_vault_pass
+#
+# To edit this encrypted file later:
+#   ansible-vault edit group_vars/vault.yaml --vault-password-file ~/.ansible_vault_pass
+#
+# To decrypt (if needed):
+#   ansible-vault decrypt group_vars/vault.yaml --vault-password-file ~/.ansible_vault_pass
+
+# Tailscale Auth Key (Reusable across all nodes)
+# Generate at: https://login.tailscale.com/admin/settings/keys
+# Recommendation: Use a reusable auth key with appropriate expiration
+# Format: tskey-auth-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+vault_tailscale_auth_key: "REPLACE_WITH_YOUR_TAILSCALE_AUTH_KEY"
