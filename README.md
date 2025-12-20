@@ -2,6 +2,9 @@
 
 My personal [homelab](https://www.reddit.com/r/homelab/) infrastructure automation for Raspberry Pi nodes. Uses [Ansible](https://www.ansible.com/) for provisioning and [dotbot](https://github.com/anishathalye/dotbot) for dotfile management.
 
+<img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/2bcf8388-ffb4-4b24-b522-2a744fa51704" />
+
+
 ## What's in here
 
 - **[`ansible/`](ansible/)** - Ansible playbooks and configuration for homelab automation
