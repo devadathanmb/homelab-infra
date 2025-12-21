@@ -3,6 +3,8 @@
 This is how I run my homelab. It keeps a small fleet of Raspberry Pis tidy, consistent, and reproducible — using [Ansible](https://www.ansible.com/) for provisioning and [Dotbot](https://github.com/anishathalye/dotbot) for dotfiles.
 
 <img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/2bcf8388-ffb4-4b24-b522-2a744fa51704" />
+<img width="3024" height="1964" alt="image" src="https://github.com/user-attachments/assets/aed9dcb6-6b32-49b7-9621-599c66f24328" />
+
 
 ## What This Is
 Practical automation for my personal servers: package installs, services, tunnels, VPN, and shell setup. Opinionated enough for me, simple enough to copy.
