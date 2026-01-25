@@ -12,7 +12,8 @@ Practical automation for my personal servers: package installs, services, tunnel
 ## Repo Layout
 - [ansible/](ansible/) — Ansible config, inventory, group/host vars, and playbooks
 - [dotfiles/](dotfiles/) — Dotbot-based dotfiles and configs
-- [scripts/](scripts/) — helper scripts used around the homelab
+- [scripts/](scripts/) — Helper scripts used around the homelab
+- [docker-compose/] - Docker compose YAML files for dockerized stuff
 
 ## Architecture
 - **Tailscale VPN:** Creates a private mesh network across nodes. Each device gets a stable Tailscale IP so SSH and Ansible traffic stay inside the secure network — no exposed ports or complex firewall rules.
@@ -45,8 +46,3 @@ ansible-playbook playbooks/cloudflared.yaml --vault-password-file ~/.ansible_vau
 # Dotfiles (shell tooling via Dotbot)
 ansible-playbook playbooks/dotfiles.yaml
 ```
-
-## Secrets
-Sensitive values live in Vaulted vars under [ansible/group_vars/vault.yaml](ansible/group_vars/vault.yaml) and per-host under [ansible/host_vars/](ansible/host_vars/). Run playbooks with `--vault-password-file` as shown above.
-
-
