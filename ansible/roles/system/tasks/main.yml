@@ -32,3 +32,17 @@
     name: "{{ system_packages }}"
     state: present
   tags: [system]
+
+- name: Enable cgroup memory limits in kernel cmdline
+  ansible.builtin.replace:
+    path: "{{ cmdline_txt_path }}"
+    regexp: '^((?!.*cgroup_memory=1)(?!.*cgroup_enable=memory).*)$'
+    replace: '\1 cgroup_memory=1 cgroup_enable=memory'
+  register: cmdline_result
+  tags: [system]
+
+- name: Reboot to apply cgroup changes
+  ansible.builtin.reboot:
+    reboot_timeout: 120
+  when: cmdline_result.changed
+  tags: [system]

@@ -1,44 +1,33 @@
 ---
+- name: Get remote user home directory
+  ansible.builtin.getent:
+    database: passwd
+    key: "{{ ansible_user }}"
+  tags: [git, ssh]
+
+- name: Set SSH path facts
+  ansible.builtin.set_fact:
+    _git_home: "{{ ansible_facts.getent_passwd[ansible_user][4] }}"
+    _git_ssh_dir: "{{ ansible_facts.getent_passwd[ansible_user][4] }}/.ssh"
+    _git_ssh_key_path: "{{ ansible_facts.getent_passwd[ansible_user][4] }}/.ssh/{{ git_ssh_key_name }}"
+  tags: [git, ssh]
+
 - name: Ensure SSH directory exists
   ansible.builtin.file:
-    path: "{{ git_ssh_dir }}"
+    path: "{{ _git_ssh_dir }}"
     state: directory
     mode: "0700"
   tags: [git, ssh]
-
-- name: Set global Git configuration
-  community.general.git_config:
-    name: "{{ item.name }}"
-    scope: global
-    value: "{{ item.value }}"
-  loop: "{{ git_global_config }}"
-  tags: [git]
-
-- name: Set Git user name
-  community.general.git_config:
-    name: user.name
-    scope: global
-    value: "{{ git_user_name }}"
-  when: git_user_name | length > 0
-  tags: [git]
-
-- name: Set Git user email
-  community.general.git_config:
-    name: user.email
-    scope: global
-    value: "{{ git_user_email }}"
-  when: git_user_email | length > 0
-  tags: [git]
 
 - name: Ensure Git SSH key exists when enabled
   ansible.builtin.command:
     cmd: >-
       ssh-keygen -q -t ed25519
-      -C "{{ git_ssh_key_comment }}"
-      -f "{{ git_ssh_key_path }}"
+      -C "{{ ansible_user }}@{{ inventory_hostname }}"
+      -f "{{ _git_ssh_key_path }}"
       -N ""
   args:
-    creates: "{{ git_ssh_key_path }}"
+    creates: "{{ _git_ssh_key_path }}"
   when: git_ssh_generate_key
   register: git_ssh_keygen_result
   tags: [git, ssh]
@@ -46,13 +35,13 @@
 - name: Ensure SSH config exists
   ansible.builtin.template:
     src: ssh_config.j2
-    dest: "{{ git_ssh_config_path }}"
+    dest: "{{ _git_ssh_dir }}/config"
     mode: "0600"
   tags: [git, ssh]
 
 - name: Trust pinned Git host keys
   ansible.builtin.known_hosts:
-    path: "{{ git_ssh_known_hosts_path }}"
+    path: "{{ _git_ssh_dir }}/known_hosts"
     name: "{{ item.name }}"
     key: "{{ item.key }}"
     state: present
@@ -61,13 +50,13 @@
 
 - name: Check whether a Git SSH public key exists
   ansible.builtin.stat:
-    path: "{{ git_ssh_key_path }}.pub"
+    path: "{{ _git_ssh_key_path }}.pub"
   register: git_ssh_public_key_stat
   tags: [git, ssh]
 
 - name: Read Git SSH public key
   ansible.builtin.slurp:
-    src: "{{ git_ssh_key_path }}.pub"
+    src: "{{ _git_ssh_key_path }}.pub"
   register: git_ssh_public_key
   when: git_ssh_public_key_stat.stat.exists
   tags: [git, ssh]

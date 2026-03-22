@@ -11,7 +11,6 @@ base_packages:
   - jq
   - ripgrep
   - fastfetch
-  - lazydocker
   - git
   - htop
   - btop

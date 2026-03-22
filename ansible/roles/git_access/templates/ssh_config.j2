@@ -2,7 +2,7 @@
 Host {{ host.host }}
   HostName {{ host.hostname }}
   User {{ host.user }}
-  IdentityFile {{ host.identity_file }}
+  IdentityFile ~/.ssh/{{ host.key_name }}
   IdentitiesOnly {{ 'yes' if host.identities_only | default(true) else 'no' }}
 
 {% endfor %}

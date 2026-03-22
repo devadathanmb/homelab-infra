@@ -1,26 +1,11 @@
 ---
-git_home: "{{ ansible_facts.user_dir }}"
-git_ssh_dir: "{{ git_home }}/.ssh"
-git_ssh_config_path: "{{ git_ssh_dir }}/config"
-git_ssh_known_hosts_path: "{{ git_ssh_dir }}/known_hosts"
 git_ssh_key_name: "id_ed25519"
-git_ssh_key_path: "{{ git_ssh_dir }}/{{ git_ssh_key_name }}"
 git_ssh_generate_key: false
-git_ssh_key_comment: "{{ git_user_email | default(ansible_user ~ '@' ~ inventory_hostname, true) }}"
-git_user_name: ""
-git_user_email: ""
-git_global_config:
-  - name: pull.rebase
-    value: "true"
-  - name: rebase.autostash
-    value: "true"
-  - name: push.autoSetupRemote
-    value: "true"
 git_ssh_hosts:
   - host: github.com
     hostname: github.com
     user: git
-    identity_file: "{{ git_ssh_key_path }}"
+    key_name: "{{ git_ssh_key_name }}"
     identities_only: true
 git_known_hosts:
   - name: github.com

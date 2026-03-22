@@ -6,8 +6,6 @@ timezone: "Asia/Kolkata"
 locale: "en_IN.UTF-8"
 locale_gen_entry: "en_IN UTF-8"
 
-# Git bootstrap configuration
-git_user_name: "Devadathan M B"
-git_user_email: "devadathanmb@gmail.com"
+# Git SSH configuration
 git_ssh_generate_key: true
 git_ssh_key_name: "id_ed25519_github"
