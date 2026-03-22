@@ -8,6 +8,25 @@
     accept_newhostkey: false
   tags: [dotfiles]
 
+- name: Download Zap install script
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/zap-zsh/zap/master/install.zsh
+    dest: /tmp/zap-install.zsh
+    mode: "0755"
+  tags: [dotfiles]
+
+- name: Install Zap zsh plugin manager
+  ansible.builtin.command:
+    cmd: /usr/bin/zsh /tmp/zap-install.zsh --branch release-v1 --keep
+    creates: "~/.local/share/zap"
+  tags: [dotfiles]
+
+- name: Remove Zap install script
+  ansible.builtin.file:
+    path: /tmp/zap-install.zsh
+    state: absent
+  tags: [dotfiles]
+
 - name: Run dotbot install to create symlinks
   ansible.builtin.command:
     cmd: ./install
