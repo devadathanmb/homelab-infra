@@ -10,7 +10,6 @@
 # Actual path: your dotfiles repo reference
 - link:
     ~/.tmux.conf: .tmux.conf
-    ~/.vimrc: .vimrc
     ~/.curlrc: .curlrc
     ~/.psqlrc: .psqlrc
     ~/.wgetrc: .wgetrc

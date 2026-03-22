@@ -1,0 +1,5 @@
+---
+apt_cache_valid_time: 3600
+docker_packages:
+  - docker.io
+  - docker-compose

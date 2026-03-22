@@ -1,0 +1,30 @@
+---
+apt_cache_valid_time: 3600
+base_packages:
+  - vim
+  - neovim
+  - zsh
+  - zoxide
+  - fzf
+  - tmux
+  - tree
+  - jq
+  - ripgrep
+  - fastfetch
+  - lazydocker
+  - git
+  - htop
+  - btop
+  - iotop
+  - iftop
+  - ncdu
+  - curl
+  - wget
+  - net-tools
+  - dnsutils
+  - nmap
+  - traceroute
+  - rsync
+  - unzip
+  - zip
+  - tar

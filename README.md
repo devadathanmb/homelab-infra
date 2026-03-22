@@ -7,18 +7,26 @@ This is how I run my homelab. It keeps a small fleet of Raspberry Pis tidy, cons
 
 
 ## What This Is
-Practical automation for my personal servers: package installs, services, tunnels, VPN, and shell setup. Opinionated enough for me, simple enough to copy.
+Practical automation for my personal servers: package installs, services, VPN, and shell setup. Opinionated enough for me, simple enough to copy.
 
 ## Repo Layout
-- [ansible/](ansible/) — Ansible config, inventory, group/host vars, and playbooks
+- [ansible/](ansible/) — Ansible config, inventory, group/host vars, roles, and playbooks
 - [dotfiles/](dotfiles/) — Dotbot-based dotfiles and configs
-- [scripts/](scripts/) — Helper scripts used around the homelab
-- [docker-compose/] - Docker compose YAML files for dockerized stuff
+- [docker-compose/](docker-compose/) — Docker Compose files for self-hosted services
+
+## Services
+
+| Service | Port | Description |
+|---|---|---|
+| AdGuard Home | 80, 53 | DNS-level ad blocking |
+| Portainer | 9443 | Docker management UI |
+| Jellyfin | 8096 | Media server |
+| FreshRSS | 8086 | RSS reader |
+| Miniflux | 8085 | Minimal RSS reader |
+| Stirling PDF | 8080 | PDF tools |
 
 ## Architecture
-- **Tailscale VPN:** Creates a private mesh network across nodes. Each device gets a stable Tailscale IP so SSH and Ansible traffic stay inside the secure network — no exposed ports or complex firewall rules.
-- **Cloudflare Tunnel:** Exposes selected local services to the public internet via outbound-only tunnels. Cloudflared connects to Cloudflare’s edge, and DNS points there, so you don’t open inbound ports on your network.
-- **How they fit:** Admin access uses Tailscale for secure management; public-facing apps use Cloudflare Tunnel for HTTPS. Ansible keeps both configured with inventories and vaulted secrets.
+- **Automation scope:** This repo focuses on base machine setup, Docker, Git access, and dotfiles. Product-specific networking and exposure layers are intentionally kept out unless they are clearly justified and maintained.
 
 ## Setup
 1) Vault password (for encrypted vars):
@@ -27,22 +35,32 @@ echo 'your-vault-password' > ~/.ansible_vault_pass
 chmod 600 ~/.ansible_vault_pass
 ```
 2) Inventory: edit [ansible/inventory.ini](ansible/inventory.ini) with your hosts.
+3) Install required Ansible collections:
+```bash
+cd ansible
+ansible-galaxy collection install -r collections/requirements.yml
+```
 
 ## Usage
 From the `ansible/` directory:
 ```bash
-# Bootstrap a fresh Pi
+# Full provision (all roles in order)
+ansible-playbook playbooks/site.yaml
+
+# Fresh system bootstrap (packages + system + docker)
 ansible-playbook playbooks/bootstrap.yaml
 
-# Update packages
+# Run a specific playbook
+ansible-playbook playbooks/packages.yaml
+ansible-playbook playbooks/system.yaml
+ansible-playbook playbooks/docker.yaml
+ansible-playbook playbooks/git.yaml
+ansible-playbook playbooks/dotfiles.yaml
+
+# Update packages only
 ansible-playbook playbooks/update.yaml
 
-# Tailscale (requires Vault)
-ansible-playbook playbooks/tailscale.yaml --vault-password-file ~/.ansible_vault_pass
-
-# Cloudflare Tunnel (requires Vault)
-ansible-playbook playbooks/cloudflared.yaml --vault-password-file ~/.ansible_vault_pass
-
-# Dotfiles (shell tooling via Dotbot)
-ansible-playbook playbooks/dotfiles.yaml
+# Run tasks matching a tag (works with site.yaml or any playbook)
+ansible-playbook playbooks/site.yaml --tags "docker"
+ansible-playbook playbooks/site.yaml --tags "git,ssh"
 ```

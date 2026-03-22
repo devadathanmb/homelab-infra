@@ -1,0 +1,34 @@
+---
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ timezone }}"
+  tags: [system]
+
+- name: Ensure locale exists
+  ansible.builtin.lineinfile:
+    path: /etc/locale.gen
+    regexp: '^#?{{ locale_gen_entry | regex_escape() }}$'
+    line: "{{ locale_gen_entry }}"
+  register: locale_gen_entry_result
+  tags: [system]
+
+- name: Generate locale
+  ansible.builtin.command: locale-gen
+  when: locale_gen_entry_result.changed
+  changed_when: locale_gen_entry_result.changed
+  tags: [system]
+
+- name: Set default system locale
+  ansible.builtin.lineinfile:
+    path: /etc/default/locale
+    regexp: '^LANG='
+    line: "LANG={{ locale }}"
+    create: true
+    mode: "0644"
+  tags: [system]
+
+- name: Install system packages
+  ansible.builtin.apt:
+    name: "{{ system_packages }}"
+    state: present
+  tags: [system]

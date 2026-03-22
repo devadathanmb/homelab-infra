@@ -1,0 +1,8 @@
+{% for host in git_ssh_hosts %}
+Host {{ host.host }}
+  HostName {{ host.hostname }}
+  User {{ host.user }}
+  IdentityFile {{ host.identity_file }}
+  IdentitiesOnly {{ 'yes' if host.identities_only | default(true) else 'no' }}
+
+{% endfor %}

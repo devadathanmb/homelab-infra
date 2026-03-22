@@ -1,0 +1,9 @@
+---
+- name: Configure Git and SSH access
+  hosts: homelab
+  become: false
+  gather_facts: true
+
+  roles:
+    - role: git_access
+      tags: [git, ssh]

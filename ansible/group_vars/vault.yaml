@@ -18,9 +18,3 @@
 #
 # To decrypt (if needed):
 #   ansible-vault decrypt group_vars/vault.yaml --vault-password-file ~/.ansible_vault_pass
-
-# Tailscale Auth Key (Reusable across all nodes)
-# Generate at: https://login.tailscale.com/admin/settings/keys
-# Recommendation: Use a reusable auth key with appropriate expiration
-# Format: tskey-auth-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-vault_tailscale_auth_key: "REPLACE_WITH_YOUR_TAILSCALE_AUTH_KEY"

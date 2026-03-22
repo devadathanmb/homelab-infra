@@ -1,3 +1,4 @@
+---
 - name: Update and maintain system
   hosts: homelab
   become: true
@@ -6,31 +7,32 @@
   tasks:
     - name: Update apt cache
       ansible.builtin.apt:
-        update_cache: yes
+        update_cache: true
+        cache_valid_time: "{{ apt_cache_valid_time }}"
       tags: [update]
 
-    - name: Upgrade all packages
+    - name: Upgrade installed packages
       ansible.builtin.apt:
         upgrade: dist
-        autoremove: yes
-        autoclean: yes
+        autoremove: true
+        autoclean: true
       register: apt_upgrade
       tags: [update]
 
-    - name: Check if reboot is required
+    - name: Check whether a reboot is required
       ansible.builtin.stat:
         path: /var/run/reboot-required
       register: reboot_required_file
       tags: [update]
 
-    - name: Display reboot status
-      ansible.builtin.debug:
-        msg: "Reboot is required!"
-      when: reboot_required_file.stat.exists
-      tags: [update]
-
-    - name: List changed packages
+    - name: Report changed package operations
       ansible.builtin.debug:
         var: apt_upgrade.stdout_lines
       when: apt_upgrade.changed
+      tags: [update]
+
+    - name: Report reboot status
+      ansible.builtin.debug:
+        msg: "Reboot is required."
+      when: reboot_required_file.stat.exists
       tags: [update]

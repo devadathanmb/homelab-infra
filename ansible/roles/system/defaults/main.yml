@@ -1,0 +1,6 @@
+---
+timezone: "UTC"
+locale: "en_US.UTF-8"
+locale_gen_entry: "en_US.UTF-8 UTF-8"
+system_packages:
+  - unattended-upgrades

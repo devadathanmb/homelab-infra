@@ -1,0 +1,9 @@
+---
+- name: Install base packages
+  hosts: homelab
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: packages
+      tags: [packages]

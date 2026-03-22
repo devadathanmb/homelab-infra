@@ -1,5 +1,5 @@
 ---
-- name: Bootstrap fresh Debian installation
+- name: Install base packages
   ansible.builtin.import_playbook: packages.yaml
 
 - name: Apply base system configuration
@@ -7,3 +7,9 @@
 
 - name: Install Docker runtime
   ansible.builtin.import_playbook: docker.yaml
+
+- name: Configure Git and SSH access
+  ansible.builtin.import_playbook: git.yaml
+
+- name: Deploy dotfiles
+  ansible.builtin.import_playbook: dotfiles.yaml
