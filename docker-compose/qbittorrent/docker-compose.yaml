@@ -1,0 +1,49 @@
+services:
+  qbittorrent:
+    # libtorrentv1 tag avoids the libtorrent 2.x mmap page cache OOM bug.
+    # On a Pi, libtorrent 2.x can exhaust all RAM at the kernel level, bypassing
+    # Docker mem_limit, and lock up the host. libtorrent v1.2 does not have this issue.
+    image: lscr.io/linuxserver/qbittorrent:libtorrentv1
+    container_name: qbittorrent
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: 10m
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Asia/Kolkata
+      # WEBUI_PORT must match BOTH sides of the port mapping below.
+      # Asymmetric remapping (e.g. 9090:8080) breaks CSRF protection and locks you out.
+      WEBUI_PORT: 8080
+      # Bittorrent TCP/UDP listen port. Must match both sides of port mapping below.
+      TORRENTING_PORT: 6881
+    volumes:
+      - $HOME/.config/qbittorrent:/config
+      - $HOME/downloads:/downloads
+    ports:
+      - 8080:8080         # WebUI
+      - 6881:6881         # BitTorrent TCP
+      - 6881:6881/udp     # BitTorrent UDP
+    # Memory cap as a safety guardrail on Pi's limited RAM.
+    # Note: this alone does NOT prevent the libtorrent 2.x OOM issue — that's why we
+    # use the libtorrentv1 tag above. For libtorrent v2, you'd also need to set
+    # "Disk IO read/write mode → Disable OS cache" in the WebUI (Tools > Options > Advanced).
+    mem_limit: 1g
+
+    # ── Post-setup checklist ──────────────────────────────────────────────────
+    # 1. On first start, qBittorrent prints a TEMPORARY password to the container log:
+    #      docker logs qbittorrent | grep -i "temporary password"
+    #    Log in at http://<pi-ip>:8080 (user: admin) and set a PERMANENT password
+    #    immediately. If you don't, a new random password is generated on every restart.
+    #
+    # 2. In Tools > Options > Advanced (recommended for Pi performance):
+    #    - Physical memory (RAM) usage limit: 256–512 MiB
+    #    - Asynchronous I/O threads: 4 (matches Pi 4/5 core count)
+    #    - Transfer list refresh interval: 3000–5000 ms (reduces CPU overhead headless)
+    #
+    # 3. In Tools > Options > BitTorrent:
+    #    - Global max connections: 100–150
+    #    - Max connections per torrent: 50
+    #    - Uncheck "Resolve peer host names" (saves CPU / latency on Pi)
+    # ─────────────────────────────────────────────────────────────────────────
