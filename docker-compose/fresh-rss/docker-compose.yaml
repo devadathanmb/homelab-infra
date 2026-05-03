@@ -49,6 +49,8 @@ services:
         --password ${ADMIN_PASSWORD}
         --user admin
     # Optional healthcheck
+    labels:
+      autoheal: "true"
     healthcheck:
       test: ["CMD", "cli/health.php"]
       timeout: 10s
