@@ -3,9 +3,9 @@ services:
     image: glanceapp/glance:latest
     container_name: glance
     # Glance listens on 8080 inside the container; host 8080 is taken by
-    # qbittorrent, so expose it on 8081.
+    # qbittorrent and 8081 by pulse, so expose it on 8082.
     ports:
-      - "8081:8080"
+      - "8082:8080"
     volumes:
       - ./config:/app/config
       - /etc/timezone:/etc/timezone:ro

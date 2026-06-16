@@ -24,7 +24,7 @@ Practical automation for my personal servers: package installs, services, VPN, a
 | FreshRSS | 8086 | RSS reader |
 | Miniflux | 8085 | Minimal RSS reader |
 | Stirling PDF | 8080 | PDF tools |
-| Glance | 8081 | Self-hosted dashboard |
+| Glance | 8082 | Self-hosted dashboard |
 
 ## Architecture
 - **Automation scope:** This repo focuses on base machine setup, Docker, Git access, and dotfiles. Product-specific networking and exposure layers are intentionally kept out unless they are clearly justified and maintained.
