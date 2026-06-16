@@ -19,7 +19,9 @@ pages:
                     label: Local
 
               - type: weather
-                location: Chalakudy, Kerala, India
+                # Open-Meteo's geocoder indexes this town as "Chalakudi"
+                # (the -dy spelling returns no results).
+                location: Chalakudi, Kerala, India
                 units: metric
                 hour-format: 24h
 
