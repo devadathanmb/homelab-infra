@@ -19,40 +19,26 @@ pages:
                     label: Local
 
               - type: weather
-                # TODO: change to your city.
-                location: Kochi, India
+                location: Chalakudy, Kerala, India
                 units: metric
                 hour-format: 24h
 
           - type: monitor
             cache: 1m
             title: Services
+            # Probed from inside the container, so use host.docker.internal
+            # (mapped via extra_hosts) rather than the mDNS pi.local name.
             sites:
               - title: Jellyfin
-                url: http://pi.local:8096
+                url: http://host.docker.internal:8096
                 icon: di:jellyfin
               - title: AdGuard Home
                 # Admin UI is mapped host 8000 -> container 3000.
-                url: http://pi.local:8000
+                url: http://host.docker.internal:8000
                 icon: di:adguard-home
               - title: qBittorrent
-                url: http://pi.local:8080
+                url: http://host.docker.internal:8080
                 icon: di:qbittorrent
-              - title: Portainer
-                url: https://pi.local:9443
-                icon: di:portainer
-                allow-insecure: true  # self-signed cert
-              - title: FreshRSS
-                url: http://pi.local:8086
-                icon: di:freshrss
-              - title: Miniflux
-                url: http://pi.local:8085
-                icon: di:miniflux
-              - title: Stirling PDF
-                # Defined in the repo but not currently running on the Pi
-                # (host 8080 is in use by qbittorrent).
-                url: http://pi.local:8080
-                icon: di:stirling-pdf
 
           - type: bookmarks
             groups:

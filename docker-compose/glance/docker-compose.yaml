@@ -10,6 +10,11 @@ services:
       - ./config:/app/config
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    # mDNS (.local) names don't resolve inside containers. Map
+    # host.docker.internal to the host so the monitor can reach
+    # sibling services via their host-published ports.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: unless-stopped
     labels:
       autoheal: "true"
