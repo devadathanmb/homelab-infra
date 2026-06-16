@@ -1,0 +1,22 @@
+services:
+  glance:
+    image: glanceapp/glance:latest
+    container_name: glance
+    # Glance listens on 8080 inside the container; host 8080 is taken by
+    # qbittorrent, so expose it on 8081.
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./config:/app/config
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    labels:
+      autoheal: "true"
+    healthcheck:
+      # The image is Alpine-based (busybox) and ships wget but not curl.
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s

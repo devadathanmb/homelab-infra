@@ -1,0 +1,78 @@
+pages:
+  - name: Home
+    # Slim, centered startpage layout.
+    width: slim
+    hide-desktop-navigation: true
+    center-vertically: true
+    columns:
+      - size: full
+        widgets:
+          - type: search
+            autofocus: true
+
+          - type: group
+            widgets:
+              - type: clock
+                hour-format: 24h
+                timezones:
+                  - timezone: Asia/Kolkata
+                    label: Local
+
+              - type: weather
+                # TODO: change to your city.
+                location: Kochi, India
+                units: metric
+                hour-format: 24h
+
+          - type: monitor
+            cache: 1m
+            title: Services
+            sites:
+              - title: Jellyfin
+                url: http://pi.local:8096
+                icon: di:jellyfin
+              - title: AdGuard Home
+                # Admin UI is mapped host 8000 -> container 3000.
+                url: http://pi.local:8000
+                icon: di:adguard-home
+              - title: qBittorrent
+                url: http://pi.local:8080
+                icon: di:qbittorrent
+              - title: Portainer
+                url: https://pi.local:9443
+                icon: di:portainer
+                allow-insecure: true  # self-signed cert
+              - title: FreshRSS
+                url: http://pi.local:8086
+                icon: di:freshrss
+              - title: Miniflux
+                url: http://pi.local:8085
+                icon: di:miniflux
+              - title: Stirling PDF
+                # Defined in the repo but not currently running on the Pi
+                # (host 8080 is in use by qbittorrent).
+                url: http://pi.local:8080
+                icon: di:stirling-pdf
+
+          - type: bookmarks
+            groups:
+              - title: General
+                links:
+                  - title: Gmail
+                    url: https://mail.google.com/
+                  - title: GitHub
+                    url: https://github.com/
+                  - title: Calendar
+                    url: https://calendar.google.com/
+              - title: Dev
+                links:
+                  - title: Portainer
+                    url: https://pi.local:9443
+                  - title: AdGuard
+                    url: http://pi.local:8000
+              - title: Media
+                links:
+                  - title: Jellyfin
+                    url: http://pi.local:8096
+                  - title: YouTube
+                    url: https://www.youtube.com/
