@@ -48,13 +48,16 @@ pages:
                 name: Pi
                 # hwmon sensor name on this Pi (checked via /sys/class/hwmon).
                 cpu-temp-sensor: cpu_thermal
+                hide-mountpoints-by-default: false
                 mountpoints:
                   "/":
                     name: Root
+                  "/boot/firmware":
+                    name: Boot
 
           - type: docker-containers
-            hide-by-default: true
-            running-only: true
+            hide-by-default: false
+            running-only: false
 
           - type: group
             widgets:
