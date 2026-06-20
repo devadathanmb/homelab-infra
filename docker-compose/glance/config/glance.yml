@@ -46,6 +46,11 @@ pages:
             servers:
               - type: local
                 name: Pi
+                # hwmon sensor name on this Pi (checked via /sys/class/hwmon).
+                cpu-temp-sensor: cpu_thermal
+                mountpoints:
+                  "/":
+                    name: Root
 
           - type: docker-containers
             hide-by-default: true
@@ -62,3 +67,18 @@ pages:
           - type: hacker-news
             limit: 15
             collapse-after: 5
+
+          - type: bookmarks
+            groups:
+              - title: Services
+                links:
+                  - title: Jellyfin
+                    url: http://pi.local:8096
+                  - title: AdGuard Home
+                    url: http://pi.local:8000
+                  - title: qBittorrent
+                    url: http://pi.local:8080
+                  - title: Portainer
+                    url: https://pi.local:9443
+                  - title: Beszel
+                    url: http://pi.local:8090
