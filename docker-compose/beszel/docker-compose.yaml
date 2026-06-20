@@ -38,6 +38,8 @@ services:
       # Agent runs on host network (not the hub's bridge network), so it
       # must reach the hub via localhost, not the container DNS name.
       HUB_URL: http://localhost:8090
-      # Filled in after pairing the agent from the hub's web UI.
-      TOKEN: ""
-      KEY: ""
+      # Universal token (Settings > Add System > universal token) plus the
+      # hub's SSH public key (GET /api/beszel/getkey), used to auto-register
+      # this system with the hub on first connection. Set in .env (gitignored).
+      TOKEN: ${BESZEL_AGENT_TOKEN}
+      KEY: ${BESZEL_HUB_KEY}
