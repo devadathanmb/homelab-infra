@@ -59,49 +59,6 @@ pages:
               - type: calendar
                 first-day-of-week: monday
 
-          - type: releases
-            show-source-icon: true
-            collapse-after: 5
-            repositories:
-              - glanceapp/glance
-              - sst/opencode
-              - earendil-works/pi
-              - ghostty-org/ghostty
-
           - type: hacker-news
             limit: 15
             collapse-after: 5
-
-          - type: rss
-            title: Tech News
-            style: vertical-list
-            limit: 15
-            collapse-after: 5
-            feeds:
-              - url: https://feeds.arstechnica.com/arstechnica/index
-                title: Ars Technica
-              - url: https://www.theverge.com/rss/index.xml
-                title: The Verge
-
-          - type: bookmarks
-            groups:
-              - title: General
-                links:
-                  - title: Gmail
-                    url: https://mail.google.com/
-                  - title: GitHub
-                    url: https://github.com/
-                  - title: Calendar
-                    url: https://calendar.google.com/
-              - title: Dev
-                links:
-                  - title: Portainer
-                    url: https://pi.local:9443
-                  - title: AdGuard
-                    url: http://pi.local:8000
-              - title: Media
-                links:
-                  - title: Jellyfin
-                    url: http://pi.local:8096
-                  - title: YouTube
-                    url: https://www.youtube.com/
