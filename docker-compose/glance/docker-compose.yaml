@@ -10,6 +10,9 @@ services:
       - ./config:/app/config
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+      # Read-only: only needed for the docker-containers widget to list
+      # container status, never to control containers.
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     # mDNS (.local) names don't resolve inside containers. Map
     # host.docker.internal to the host so the monitor can reach
     # sibling services via their host-published ports.

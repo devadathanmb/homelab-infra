@@ -42,6 +42,47 @@ pages:
                 url: http://host.docker.internal:8080
                 icon: di:qbittorrent
 
+          - type: server-stats
+            servers:
+              - type: local
+                name: Pi
+
+          - type: docker-containers
+            hide-by-default: true
+            running-only: true
+
+          - type: group
+            widgets:
+              - type: to-do
+                id: home-todo
+
+              - type: calendar
+                first-day-of-week: monday
+
+          - type: releases
+            show-source-icon: true
+            collapse-after: 5
+            repositories:
+              - glanceapp/glance
+              - sst/opencode
+              - earendil-works/pi
+              - ghostty-org/ghostty
+
+          - type: hacker-news
+            limit: 15
+            collapse-after: 5
+
+          - type: rss
+            title: Tech News
+            style: vertical-list
+            limit: 15
+            collapse-after: 5
+            feeds:
+              - url: https://feeds.arstechnica.com/arstechnica/index
+                title: Ars Technica
+              - url: https://www.theverge.com/rss/index.xml
+                title: The Verge
+
           - type: bookmarks
             groups:
               - title: General
