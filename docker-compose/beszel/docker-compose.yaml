@@ -12,8 +12,12 @@ services:
       - ./socket:/beszel_socket
     labels:
       autoheal: "true"
+    # The henrygd/beszel image is distroless (no shell/wget/curl), so the
+    # probe must call the hub's built-in `health` subcommand directly.
+    # A wget-based check can never succeed here and leaves the container
+    # permanently "unhealthy", which autoheal then restarts on a loop.
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8090/"]
+      test: ["CMD", "/beszel", "health", "--url", "http://localhost:8090"]
       interval: 30s
       timeout: 10s
       retries: 3
