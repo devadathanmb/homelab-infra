@@ -43,3 +43,11 @@ services:
       # this system with the hub on first connection. Set in .env (gitignored).
       TOKEN: ${BESZEL_AGENT_TOKEN}
       KEY: ${BESZEL_HUB_KEY}
+    labels:
+      autoheal: "true"
+    healthcheck:
+      test: ["CMD", "/agent", "health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
