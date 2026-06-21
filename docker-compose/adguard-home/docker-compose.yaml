@@ -12,6 +12,17 @@ services:
     volumes:
       - config:/opt/adguardhome/conf # app configuration
       - work:/opt/adguardhome/work # app working directory
+    labels:
+      autoheal: "true"
+    # AdGuard Home dropped its own Docker HEALTHCHECK upstream (caused issues
+    # with bind_hosts/Podman), so we probe the web UI on port 80 ourselves.
+    # Image only ships wget, not curl.
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:80/"]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
 volumes:
   config:

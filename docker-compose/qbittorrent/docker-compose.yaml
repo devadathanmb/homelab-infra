@@ -30,6 +30,14 @@ services:
     # use the libtorrentv1 tag above. For libtorrent v2, you'd also need to set
     # "Disk IO read/write mode → Disable OS cache" in the WebUI (Tools > Options > Advanced).
     mem_limit: 1g
+    labels:
+      autoheal: "true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "--silent", "--show-error", "--max-time", "5", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
     # ── Post-setup checklist ──────────────────────────────────────────────────
     # 1. On first start, qBittorrent prints a TEMPORARY password to the container log:
