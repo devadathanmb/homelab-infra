@@ -95,3 +95,8 @@ credentials.*
 # Backup files
 *.backup
 *~
+
+# Docker Compose runtime state
+/docker-compose/beszel/agent_data/
+/docker-compose/beszel/hub_data/
+/docker-compose/beszel/socket/
