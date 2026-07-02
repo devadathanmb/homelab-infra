@@ -12,8 +12,8 @@
 -- Error
 -- \set VERBOSITY verbose
 
--- Timezone Asia/Kolkata
-\set timezone 'Asia/Kolkata'
+-- Use a real PostgreSQL setting; \set would only create a psql variable.
+SET timezone = 'Asia/Kolkata';
 
 -- History
 \set HISTFILE ~/.psql_history

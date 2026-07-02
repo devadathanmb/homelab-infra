@@ -1,15 +1,20 @@
-# Created by Zap installer
-[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh" ] && source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
+# Zap plugins are loaded only when Zap is installed.
+# This keeps a fresh shell usable before dotfiles/bootstrap finishes.
+if [[ -r "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh" ]]; then
+  source "${XDG_DATA_HOME:-$HOME/.local/share}/zap/zap.zsh"
 
-plug "zsh-users/zsh-autosuggestions"
-plug "zap-zsh/supercharge"
-plug "devadathanmb/zap-robbyrussell"
-plug "zap-zsh/fzf"
-plug "Aloxaf/fzf-tab"
-plug "Freed-Wu/fzf-tab-source"
-plug "zap-zsh/vim"
-plug "zap-zsh/completions"
-plug "zsh-users/zsh-syntax-highlighting"
+  plug "zsh-users/zsh-autosuggestions"
+  plug "zap-zsh/supercharge"
+  plug "devadathanmb/zap-robbyrussell"
+  plug "zap-zsh/fzf"
+  plug "Aloxaf/fzf-tab"
+  plug "Freed-Wu/fzf-tab-source"
+  plug "zap-zsh/vim"
+  plug "zap-zsh/completions"
+  plug "zsh-users/zsh-syntax-highlighting"
+fi
 
-# Path
-export PATH="$PATH:/home/dev/.local/bin"
+# Add user-local binaries without hard-coding the username or duplicating PATH entries.
+if [[ -d "$HOME/.local/bin" && ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+  export PATH="$PATH:$HOME/.local/bin"
+fi
