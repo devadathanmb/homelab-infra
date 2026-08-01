@@ -10,7 +10,7 @@ services:
       - 80:80/tcp # http web interface
       - 8000:3000/tcp # initial setup web interface
     volumes:
-      - config:/opt/adguardhome/conf # app configuration
+      - ./conf:/opt/adguardhome/conf # app configuration (git-tracked)
       - work:/opt/adguardhome/work # app working directory
     labels:
       autoheal: "true"
@@ -25,7 +25,5 @@ services:
       start_period: 30s
 
 volumes:
-  config:
-    driver: local
   work:
     driver: local
